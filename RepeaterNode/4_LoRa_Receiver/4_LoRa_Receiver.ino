@@ -45,11 +45,22 @@ uint8_t TXPacketL;
 uint32_t TXPacketCount, startmS, endmS;
 
 uint8_t buff[] = "Packet has been echoed";
+uint8_t passedBuff[] = ""; 
 
 void loop()
 {
   rxReceiver(); 
 }
+
+int compareArrays(uint8_t a[], uint8_t b[], int n) {
+  int ii;
+  for(ii = 1; ii <= n; ii++) {
+    if (a[0] != b[ii]) return 0;
+   
+  }
+  return 1;
+}
+
 
 void rxReceiver(){
   RXPacketL = LT.receive(RXBUFFER, RXBUFFER_SIZE, 60000, WAIT_RX); //wait for a packet to arrive with 60seconds (60000mS) timeout
@@ -66,7 +77,11 @@ void rxReceiver(){
   else
   {
     packet_is_OKRX();
-    txTransmitter(); 
+    if(!compareArrays(RXBUFFER, passedBuff, sizeof(passedBuff))){
+      passedBuff[sizeof(passedBuff)] = RXBUFFER[0];  
+      txTransmitter(); 
+    }
+    
   }
 
   digitalWrite(LED1, LOW);                        //LED off
@@ -74,16 +89,18 @@ void rxReceiver(){
   Serial.println();
 }
 
+
+
 void txTransmitter(){
   Serial.print(TXpower);                                       //print the transmit power defined
   Serial.print(F("dBm "));
   Serial.print(F("Packet> "));
   Serial.flush();
 
-  TXPacketL = sizeof(buff);                                    //set TXPacketL to length of array
+  TXPacketL = sizeof(RXBUFFER);                                    //set TXPacketL to length of array
   buff[TXPacketL - 1] = '*';                                   //replace null character at buffer end so its visible on reciver
 
-  LT.printASCIIPacket(buff, TXPacketL);                        //print the buffer (the sent packet) as ASCII
+  LT.printASCIIPacket(RXBUFFER, TXPacketL);                        //print the buffer (the sent packet) as ASCII
 
   digitalWrite(LED1, HIGH);
   startmS =  millis();                                         //start transmit timer
@@ -140,7 +157,7 @@ void packet_is_OKTX()
 
   Serial.print(F("  BytesSent,"));
   Serial.print(TXPacketL);                             //print transmitted packet length
-  localCRC = LT.CRCCCITT(buff, TXPacketL, 0xFFFF);
+  localCRC = LT.CRCCCITT(RXBUFFER, TXPacketL, 0xFFFF);
   Serial.print(F("  CRC,"));
   Serial.print(localCRC, HEX);                              //print CRC of sent packet
   Serial.print(F("  TransmitTime,"));
