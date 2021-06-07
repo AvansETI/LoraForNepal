@@ -49,7 +49,13 @@ uint8_t passedBuff[] = "";
 
 void loop()
 {
-  rxReceiver(); 
+  //If repeater
+  //rxReceiver(); 
+
+  //if sensor
+  BuildSendableData(RXBUFFER, 1, 3, 2, 800, 500);
+  txTransmitter(); 
+  
 }
 
 int compareArrays(uint8_t a[], uint8_t b[], int n) {
