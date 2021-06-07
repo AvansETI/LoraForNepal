@@ -27,17 +27,17 @@ uint8_t GetVolt(uint8_t data)
 
 uint8_t GetAmp(uint8_t data)
 {
-  
+   return data[2]; 
 }
 
 uint16_t GetBatteryLevel(uint8_t data)
 {
-  
+  return data[3] + data[4]; 
 }
 
 uint16_t GetSensorData(uint8_t data)
 {
-  
+  return data[5] + data[6]; 
 }
 
 uint8_t GetChecksum(uint8_t data)
