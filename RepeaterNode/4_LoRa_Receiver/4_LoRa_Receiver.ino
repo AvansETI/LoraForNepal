@@ -77,7 +77,7 @@ void rxReceiver(){
   else
   {
     packet_is_OKRX();
-    if(!compareArrays(RXBUFFER, passedBuff, sizeof(passedBuff))){
+    if(!CheckID(RXBUFFER, passedBuff)){
       passedBuff[sizeof(passedBuff)] = RXBUFFER[0];  
       txTransmitter(); 
     }
