@@ -45,7 +45,8 @@ uint8_t TXPacketL;
 uint32_t TXPacketCount, startmS, endmS;
 
 uint8_t buff[] = "Packet has been echoed";
-uint8_t passedBuff[] = ""; 
+uint8_t passedBuff[32]; 
+uint8_t passedBuffCounter = 0;
 
 void loop()
 {
@@ -85,10 +86,12 @@ void rxReceiver(){
   {
     packet_is_OKRX();
     
-    Serial.println(CheckID(RXBUFFER, passedBuff));
     if(CheckID(RXBUFFER, passedBuff)){
+      Serial.println("TestTest:D");
       Serial.println( sizeof(passedBuff));
-      passedBuff[sizeof(passedBuff)] = GetID(RXBUFFER);  
+      passedBuff[passedBuffCounter] = GetID(RXBUFFER);  
+      passedBuffCounter++;
+      passedBuffCounter %= 32;
       txTransmitter(); 
     }
     

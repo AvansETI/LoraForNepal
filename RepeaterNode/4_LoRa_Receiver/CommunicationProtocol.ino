@@ -36,6 +36,8 @@ bool CheckID(uint8_t data[], uint8_t savedID[])
   {
     if (id == savedID[i])
     {
+      Serial.print("ID: ");
+      Serial.println(id);
       Serial.println(savedID[i] == id);
       return false;
     }
@@ -94,8 +96,4 @@ void BuildSendableData(uint8_t *data, uint8_t ID, uint8_t volt, uint8_t amp, uin
   temp16 = battlevel & 0xff00;
   temp16 >>= 8;
   temp = temp16;
-  
-
-  
-  
 } 

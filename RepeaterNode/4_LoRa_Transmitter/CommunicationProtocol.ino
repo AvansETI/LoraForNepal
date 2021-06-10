@@ -84,8 +84,6 @@ bool GetChecksum(uint8_t data[])
 
 void BuildSendableData(uint8_t *data, uint8_t ID, uint8_t volt, uint8_t amp, uint16_t battlevel, uint16_t sensor)
 {
-  
-
   data[0] = ID;
   data[1] = volt;
   data[2] = amp;

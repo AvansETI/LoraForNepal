@@ -55,7 +55,6 @@ void loop()
   //if sensor
   BuildSendableData(RXBUFFER, 1, 3, 2, 800, 500);
   txTransmitter(); 
-  
 }
 
 int compareArrays(uint8_t a[], uint8_t b[], int n) {
@@ -108,13 +107,13 @@ void txTransmitter(){
   Serial.flush();
 
   TXPacketL = sizeof(RXBUFFER);                                    //set TXPacketL to length of array
-  buff[TXPacketL - 1] = '*';                                   //replace null character at buffer end so its visible on reciver
+  RXBUFFER[TXPacketL - 1] = '*';                                   //replace null character at buffer end so its visible on reciver
 
   LT.printASCIIPacket(RXBUFFER, TXPacketL);                        //print the buffer (the sent packet) as ASCII
 
   digitalWrite(LED1, HIGH);
   startmS =  millis();                                         //start transmit timer
-  if (LT.transmit(buff, TXPacketL, 10000, TXpower, WAIT_TX))   //will return packet length sent if OK, otherwise 0 if transmit, timeout 10 seconds
+  if (LT.transmit(RXBUFFER, TXPacketL, 10000, TXpower, WAIT_TX))   //will return packet length sent if OK, otherwise 0 if transmit, timeout 10 seconds
   {
     endmS = millis();                                          //packet sent, note end time
     TXPacketCount++;
