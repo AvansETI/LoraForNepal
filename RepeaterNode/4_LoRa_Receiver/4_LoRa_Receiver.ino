@@ -50,11 +50,11 @@ uint8_t passedBuff[] = "";
 void loop()
 {
   //If repeater
-  //rxReceiver(); 
+  rxReceiver(); 
 
   //if sensor
-  BuildSendableData(RXBUFFER, 1, 3, 2, 800, 500);
-  txTransmitter(); 
+ // BuildSendableData(RXBUFFER, 1, 3, 2, 800, 500);
+ // txTransmitter(); 
   
 }
 
@@ -75,16 +75,20 @@ void rxReceiver(){
 
   PacketRSSI = LT.readPacketRSSI();              //read the recived RSSI value
   PacketSNR = LT.readPacketSNR();                //read the received SNR value
-
+  
   if (RXPacketL == 0)                            //if the LT.receive() function detects an error, RXpacketL == 0
   {
+    
     packet_is_ErrorRX();
   }
   else
   {
     packet_is_OKRX();
-    if(!CheckID(RXBUFFER, passedBuff)){
-      passedBuff[sizeof(passedBuff)] = RXBUFFER[0];  
+    
+    Serial.println(CheckID(RXBUFFER, passedBuff));
+    if(CheckID(RXBUFFER, passedBuff)){
+      Serial.println( sizeof(passedBuff));
+      passedBuff[sizeof(passedBuff)] = GetID(RXBUFFER);  
       txTransmitter(); 
     }
     
@@ -140,7 +144,7 @@ void packet_is_OKRX()
   LT.printASCIIPacket(RXBUFFER, RXPacketL);        //print the packet as ASCII characters
 
   localCRC = LT.CRCCCITT(RXBUFFER, RXPacketL, 0xFFFF);  //calculate the CRC, this is the external CRC calculation of the RXBUFFER
-  Serial.print(F(",CRC,"));                        //contents, not the LoRa device internal CRC
+  /*Serial.print(F(",CRC,"));                        //contents, not the LoRa device internal CRC
   Serial.print(localCRC, HEX);
   Serial.print(F(",RSSI,"));
   Serial.print(PacketRSSI);
@@ -153,7 +157,7 @@ void packet_is_OKRX()
   Serial.print(F(",Errors,"));
   Serial.print(errors);
   Serial.print(F(",IRQreg,"));
-  Serial.print(IRQStatus, HEX);
+  Serial.print(IRQStatus, HEX);*/
 }
 
 void packet_is_OKTX()
