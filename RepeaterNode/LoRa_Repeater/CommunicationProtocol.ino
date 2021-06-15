@@ -91,9 +91,12 @@ void BuildSendableData(uint8_t *data, uint8_t ID, uint8_t volt, uint8_t amp, uin
   data[0] = ID;
   data[1] = volt;
   data[2] = amp;
-  uint8_t temp = 0;
+  
   uint16_t temp16 = 0;
   temp16 = battlevel & 0xff00;
   temp16 >>= 8;
-  temp = temp16;
+  data[3] = temp16;
+  temp16 = 0;
+  temp16 == battlevel & 0x00ff;
+  data[4] = temp16;
 } 
