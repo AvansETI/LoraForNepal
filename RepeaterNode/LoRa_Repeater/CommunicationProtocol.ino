@@ -1,6 +1,6 @@
 #include "CommunicationProtocol.h"
 
-
+uint8_t IDcounter = 0;
 
 bool CheckParity(uint8_t data[])
 {
@@ -99,4 +99,15 @@ void BuildSendableData(uint8_t *data, uint8_t ID, uint8_t volt, uint8_t amp, uin
   temp16 = 0;
   temp16 == battlevel & 0x00ff;
   data[4] = temp16;
+  temp16 = 0;
+
+  temp16 = sensor & 0xff00;
+  temp16 >>= 8;
+  data[5] = temp16;
+  temp16 = 0;
+  temp16 == sensor & 0x00ff;
+  data[6] = temp16;
+  temp16 = 0;
+  IDcounter++;
+  IDcounter %= 255;
 } 
