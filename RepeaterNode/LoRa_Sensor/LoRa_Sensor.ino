@@ -46,6 +46,7 @@ uint32_t TXPacketCount, startmS, endmS;
 
 uint8_t buff[] = "Packet has been echoed";
 uint8_t passedBuff[] = ""; 
+int id = 0; 
 
 void loop()
 {
@@ -53,7 +54,11 @@ void loop()
   ///rxReceiver(); 
 
   //if sensor
-  BuildSendableData(RXBUFFER, 1, 3, 2, 800, 500);
+  if(id =>127){
+    id = 0 ;
+  }
+  BuildSendableData(RXBUFFER, id, 3, 2, 800, 500);
+  id++; 
   txTransmitter(); 
 }
 

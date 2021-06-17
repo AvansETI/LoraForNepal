@@ -36,6 +36,8 @@ bool CheckID(uint8_t data[], uint8_t savedID[])
   {
     if (id == savedID[i])
     {
+      Serial.print("ID: ");
+      Serial.println(id);
       Serial.println(savedID[i] == id);
       return false;
     }
@@ -84,6 +86,8 @@ bool GetChecksum(uint8_t data[])
 
 void BuildSendableData(uint8_t *data, uint8_t ID, uint8_t volt, uint8_t amp, uint16_t battlevel, uint16_t sensor)
 {
+  
+
   data[0] = ID;
   data[1] = volt;
   data[2] = amp;
@@ -92,8 +96,12 @@ void BuildSendableData(uint8_t *data, uint8_t ID, uint8_t volt, uint8_t amp, uin
   temp16 = battlevel & 0xff00;
   temp16 >>= 8;
   temp = temp16;
+} 
+
+void BuildSendableData(uint8_t *data, uint8_t ID, uint8_t Heartbeat)
+{
   
 
-  
-  
+  data[0] = ID;
+  data[1] = Heartbeat;
 } 
