@@ -251,6 +251,7 @@ void led_Flash(uint16_t flashes, uint16_t delaymS)
 
 void setup()
 {
+  
   pinMode(LED1, OUTPUT);                        //setup pin as output for indicator LED
   led_Flash(2, 125);                            //two quick LED flashes to indicate program start
 

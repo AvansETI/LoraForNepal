@@ -30,6 +30,8 @@
 #include <SX128XLT.h>                            //include the appropriate library   
 #include "Settings.h"                            //include the setiings file, frequencies, LoRa settings etc   
 
+#include <arduino-timer.h>                       //Timer heartbeat
+
 SX128XLT LT;                                     //create a library class instance called LT
 
 uint32_t RXpacketCount;
@@ -48,24 +50,13 @@ uint8_t buff[] = "Packet has been echoed";
 uint8_t passedBuff[32]; 
 uint8_t passedBuffCounter = 0;
 
+auto heartbeat = timer_create_default();
+
 void loop()
 {
-  //If repeater
   rxReceiver(); 
+  heartbeat.tick(); // tick the timer
 
-  //if sensor
- // BuildSendableData(RXBUFFER, 1, 3, 2, 800, 500);
- // txTransmitter(); 
-  
-}
-
-int compareArrays(uint8_t a[], uint8_t b[], int n) {
-  int ii;
-  for(ii = 1; ii <= n; ii++) {
-    if (a[0] != b[ii]) return 0;
-   
-  }
-  return 1;
 }
 
 
@@ -86,20 +77,16 @@ void rxReceiver(){
   {
     packet_is_OKRX();
     
-    if(CheckID(RXBUFFER, passedBuff)){
-      Serial.println("TestTest:D");
-      Serial.println( sizeof(passedBuff));
-      passedBuff[passedBuffCounter] = GetID(RXBUFFER);  
-      passedBuffCounter++;
-      passedBuffCounter %= 32;
-      txTransmitter(); 
-    }
-    
   }
 
   digitalWrite(LED1, LOW);                        //LED off
 
   Serial.println();
+}
+
+bool sendHeartBeat(void *){
+  txTransmitter(); 
+  return true; 
 }
 
 
@@ -117,7 +104,7 @@ void txTransmitter(){
 
   digitalWrite(LED1, HIGH);
   startmS =  millis();                                         //start transmit timer
-  if (LT.transmit(buff, TXPacketL, 10000, TXpower, WAIT_TX))   //will return packet length sent if OK, otherwise 0 if transmit, timeout 10 seconds
+  if (LT.transmit(RXBUFFER, TXPacketL, 10000, TXpower, WAIT_TX))   //will return packet length sent if OK, otherwise 0 if transmit, timeout 10 seconds
   {
     endmS = millis();                                          //packet sent, note end time
     TXPacketCount++;
@@ -255,6 +242,8 @@ void led_Flash(uint16_t flashes, uint16_t delaymS)
 
 void setup()
 {
+  BuildSendableData(RXBUFFER, 255, 0);
+  heartbeat.every(10000000, sendHeartBeat); 
   pinMode(LED1, OUTPUT);                        //setup pin as output for indicator LED
   led_Flash(2, 125);                            //two quick LED flashes to indicate program start
 
