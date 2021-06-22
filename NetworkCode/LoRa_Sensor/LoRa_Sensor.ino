@@ -29,6 +29,8 @@
 #include <SPI.h>                                 //the lora device is SPI based so load the SPI library
 #include <SX128XLT.h>                            //include the appropriate library   
 #include "Settings.h"                            //include the setiings file, frequencies, LoRa settings etc   
+#include <CommunicationProtocol.h>
+#include <arduino-timer.h>
 
 SX128XLT LT;                                     //create a library class instance called LT
 
@@ -46,20 +48,16 @@ uint32_t TXPacketCount, startmS, endmS;
 
 uint8_t buff[] = "Packet has been echoed";
 uint8_t passedBuff[] = ""; 
-int id = 0; 
+auto timer = timer_create_default();
 
 void loop()
 {
-  //If repeater
-  ///rxReceiver(); 
+    //working with a timer only sensor code is nessesary here
 
-  //if sensor
-  if(id =>127){
-    id = 0 ;
-  }
-  BuildSendableData(RXBUFFER, id, 3, 2, 800, 500);
-  id++; 
-  txTransmitter(); 
+  timer.tick();
+
+//TODO insert SENSOR code
+   
 }
 
 int compareArrays(uint8_t a[], uint8_t b[], int n) {
@@ -69,6 +67,12 @@ int compareArrays(uint8_t a[], uint8_t b[], int n) {
    
   }
   return 1;
+}
+
+bool sendData(void *){
+  BuildSendableData(RXBUFFER, 3, 2, 800, 500);
+  txTransmitter(); 
+  return true; 
 }
 
 
@@ -334,4 +338,6 @@ void setup()
   Serial.print(F("Receiver ready - RXBUFFER_SIZE "));
   Serial.println(RXBUFFER_SIZE);
   Serial.println();
+
+  timer.every(1800000, sendData); // ruin the method senddata every 30 minutes change timer for testing
 }

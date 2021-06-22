@@ -29,6 +29,7 @@
 #include <SPI.h>                                 //the lora device is SPI based so load the SPI library
 #include <SX128XLT.h>                            //include the appropriate library   
 #include "Settings.h"                            //include the setiings file, frequencies, LoRa settings etc   
+#include <arduino-timer.h>
 
 SX128XLT LT;                                     //create a library class instance called LT
 
@@ -101,7 +102,7 @@ void rxReceiver(){
   Serial.println();
 }
 bool sendHeartBeat(void *){
-  BuildSendableData(RXBUFFER, 255 - RepeaterID, RepeaterID);
+  BuildHeartbeatData(RXBUFFER, RepeaterID);
   txTransmitter(); 
   return true; 
 }
@@ -258,7 +259,7 @@ void led_Flash(uint16_t flashes, uint16_t delaymS)
 
 void setup()
 {
-  heartbeat.every(10000000, sendHeartBeat); 
+  heartbeat.every(1800000, sendHeartBeat); 
   pinMode(LED1, OUTPUT);                        //setup pin as output for indicator LED
   led_Flash(2, 125);                            //two quick LED flashes to indicate program start
 

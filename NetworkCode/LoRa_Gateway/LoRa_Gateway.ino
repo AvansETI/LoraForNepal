@@ -50,12 +50,16 @@ uint8_t buff[] = "Packet has been echoed";
 uint8_t passedBuff[32]; 
 uint8_t passedBuffCounter = 0;
 
-auto heartbeat = timer_create_default();
 
 void loop()
 {
   rxReceiver(); 
-  heartbeat.tick(); // tick the timer
+
+  uint8_t id = getHeartbeatID(RXBUFFER);
+  if(id > 0)
+  {
+    //print to console that repeater with id is alive 
+  }
 
 }
 
@@ -84,10 +88,6 @@ void rxReceiver(){
   Serial.println();
 }
 
-bool sendHeartBeat(void *){
-  txTransmitter(); 
-  return true; 
-}
 
 
 
@@ -242,8 +242,8 @@ void led_Flash(uint16_t flashes, uint16_t delaymS)
 
 void setup()
 {
-  BuildSendableData(RXBUFFER, 255, 0);
-  heartbeat.every(10000000, sendHeartBeat); 
+  
+  
   pinMode(LED1, OUTPUT);                        //setup pin as output for indicator LED
   led_Flash(2, 125);                            //two quick LED flashes to indicate program start
 
