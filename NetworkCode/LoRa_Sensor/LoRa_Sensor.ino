@@ -29,12 +29,12 @@
 #include <SPI.h>                                 //the lora device is SPI based so load the SPI library
 #include <SX128XLT.h>                            //include the appropriate library   
 #include "Settings.h"                            //include the setiings file, frequencies, LoRa settings etc   
-#include <CommunicationProtocol.h>
+#include "CommunicationProtocol.h"
 #include <arduino-timer.h>
 
 SX128XLT LT;                                     //create a library class instance called LT
-
-const int pingPin = 10;
+uint16_t duration, cm;
+const int pingPin = 2;
 
 uint32_t RXpacketCount;
 uint32_t errors;
@@ -59,7 +59,7 @@ void loop()
   timer.tick();
 
 //TODO insert SENSOR code
- uint16_t duration, cm;
+  
 
   // The PING))) is triggered by a HIGH pulse of 2 or more microseconds.
   // Give a short LOW pulse beforehand to ensure a clean HIGH pulse:
@@ -77,16 +77,8 @@ void loop()
   duration = pulseIn(pingPin, HIGH);
   pinMode(6, OUTPUT);
   // convert the time into a distance
-  inches = microsecondsToInches(duration);
-  cm = microsecondsToCentimeters(duration);
-
-  Serial.print(cm);
-  Serial.print("cm");
-  Serial.println();
-
-
-
-   
+  //inches = microsecondsToInches(duration);
+  cm = duration / 29 / 2;
 }
 
 int compareArrays(uint8_t a[], uint8_t b[], int n) {
@@ -99,8 +91,9 @@ int compareArrays(uint8_t a[], uint8_t b[], int n) {
 }
 
 bool sendData(void *){
-  BuildSendableData(RXBUFFER, 3, 2, 800, 500);
+  BuildSendableData(RXBUFFER, 3, 2, 800, cm);
   txTransmitter(); 
+  Serial.println(GetSensorData(RXBUFFER));
   return true; 
 }
 
@@ -145,7 +138,6 @@ void txTransmitter(){
   Serial.flush();
 
   TXPacketL = sizeof(RXBUFFER);                                    //set TXPacketL to length of array
-  RXBUFFER[TXPacketL - 1] = '*';                                   //replace null character at buffer end so its visible on reciver
 
   LT.printASCIIPacket(RXBUFFER, TXPacketL);                        //print the buffer (the sent packet) as ASCII
 
@@ -370,5 +362,5 @@ void setup()
   Serial.println(RXBUFFER_SIZE);
   Serial.println();
 
-  timer.every(1800000, sendData); // ruin the method senddata every 30 minutes change timer for testing
+  timer.every(1000, sendData); // ruin the method senddata every 30 minutes change timer for testing
 }

@@ -128,6 +128,7 @@ void BuildHeartbeatData(uint8_t *data, uint8_t Heartbeat)
   
   
   data[0] = IDcounter | 0x80;
+  data[0] = data[0] - Heartbeat;
   data[1] = Heartbeat;
   IDcounter++;
   IDcounter %= 127;

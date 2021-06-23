@@ -55,6 +55,9 @@ void loop()
 {
   rxReceiver(); 
 
+  Serial.print("Sensor: ");
+  Serial.println(GetSensorData(RXBUFFER));
+
   heartbeat.tick(); // tick the timer
   
 }
@@ -87,8 +90,7 @@ void rxReceiver(){
     packet_is_OKRX();
     
     if(CheckID(RXBUFFER, passedBuff)){
-      Serial.println("TestTest:D");
-      Serial.println( sizeof(passedBuff));
+      
       passedBuff[passedBuffCounter] = GetID(RXBUFFER);  
       passedBuffCounter++;
       passedBuffCounter %= 32;
@@ -105,6 +107,8 @@ bool sendHeartBeat(void *){
   BuildHeartbeatData(RXBUFFER, RepeaterID);
   txTransmitter(); 
   return true; 
+
+  Serial.println("HEartbeatData Send");
 }
 
 
@@ -115,13 +119,12 @@ void txTransmitter(){
   Serial.flush();
 
   TXPacketL = sizeof(RXBUFFER);                                    //set TXPacketL to length of array
-  buff[TXPacketL - 1] = '*';                                   //replace null character at buffer end so its visible on reciver
 
   LT.printASCIIPacket(RXBUFFER, TXPacketL);                        //print the buffer (the sent packet) as ASCII
 
   digitalWrite(LED1, HIGH);
   startmS =  millis();                                         //start transmit timer
-  if (LT.transmit(buff, TXPacketL, 10000, TXpower, WAIT_TX))   //will return packet length sent if OK, otherwise 0 if transmit, timeout 10 seconds
+  if (LT.transmit(RXBUFFER, TXPacketL, 10000, TXpower, WAIT_TX))   //will return packet length sent if OK, otherwise 0 if transmit, timeout 10 seconds
   {
     endmS = millis();                                          //packet sent, note end time
     TXPacketCount++;
@@ -259,7 +262,7 @@ void led_Flash(uint16_t flashes, uint16_t delaymS)
 
 void setup()
 {
-  heartbeat.every(1800000, sendHeartBeat); 
+  heartbeat.every( 5000, sendHeartBeat); 
   pinMode(LED1, OUTPUT);                        //setup pin as output for indicator LED
   led_Flash(2, 125);                            //two quick LED flashes to indicate program start
 

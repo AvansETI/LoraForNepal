@@ -17,11 +17,12 @@
 #define NRESET 8
 #define LED1 2
 #define DIO1 4
-#define DIO2 -1                 //not used
+#define DIO2 -1                 //not used 
 #define DIO3 -1                 //not used
 #define RX_EN -1                //pin for RX enable, used on some SX1280 devices, set to -1 if not used
-#define TX_EN -1                //pin for TX enable, used on some SX1280 devices, set to -1 if not used ot used
-#define BUZZER -1               //pin for BUZZER, set to -1 if not used
+#define TX_EN -1                //pin for TX enable, used on some SX1280 devices, set to -1 if not used ot used  
+#define BUZZER -1               //pin for BUZZER, set to -1 if not used 
+                       
 #define LORA_DEVICE DEVICE_SX1280               //we need to define the device we are using  
 
 //LoRa Modem Parameters
@@ -35,4 +36,4 @@ const uint8_t TXpower = 10;                      //Power for transmissions in dB
 
 const uint16_t packet_delay = 1000;              //mS delay between packets
 
-#define RXBUFFER_SIZE 220                         //RX buffer size  
+#define RXBUFFER_SIZE 8                         //RX buffer size  

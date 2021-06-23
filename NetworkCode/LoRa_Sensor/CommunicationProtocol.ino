@@ -103,18 +103,21 @@ void BuildSendableData(uint8_t *data, uint8_t volt, uint8_t amp, uint16_t battle
   
   uint16_t temp16 = 0;
   temp16 = battlevel & 0xff00;
-  temp16 >>= 8;
+  temp16 = temp16 >> 8;
+ 
   data[3] = temp16;
+  
   temp16 = 0;
-  temp16 == battlevel & 0x00ff;
+  temp16 = battlevel & 0x00ff;
+  
   data[4] = temp16;
   temp16 = 0;
 
   temp16 = sensor & 0xff00;
-  temp16 >>= 8;
+  temp16 = temp16 >> 8;
   data[5] = temp16;
   temp16 = 0;
-  temp16 == sensor & 0x00ff;
+  temp16 = sensor & 0x00ff;
   data[6] = temp16;
   temp16 = 0;
   IDcounter++;
