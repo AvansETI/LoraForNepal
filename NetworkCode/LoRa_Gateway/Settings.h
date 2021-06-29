@@ -12,11 +12,11 @@
 //DIO3, BUZZER may not be in used by this sketch so they do not need to be
 //connected and should be included and be set to -1.
 
-#define NSS 10
-#define RFBUSY 7
-#define NRESET 9
-#define LED1 8
-#define DIO1 3
+#define NSS 8
+#define RFBUSY 27
+#define NRESET 22
+#define LED1 -1
+#define DIO1 17
 #define DIO2 -1                 //not used 
 #define DIO3 -1                 //not used
 #define RX_EN -1                //pin for RX enable, used on some SX1280 devices, set to -1 if not used
@@ -36,4 +36,4 @@ const uint8_t TXpower = 10;                      //Power for transmissions in dB
 
 const uint16_t packet_delay = 1000;              //mS delay between packets
 
-#define RXBUFFER_SIZE 220                         //RX buffer size  
+#define RXBUFFER_SIZE 8                         //RX buffer size  

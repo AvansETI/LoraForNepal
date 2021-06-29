@@ -29,16 +29,16 @@ bool CheckParity(uint8_t data[])
 //returns true if the the value has not been seen before and the message is free to use
 bool CheckID(uint8_t data[], uint8_t savedID[])
 {
-  Serial.println();
-  Serial.println("hello");
+  Console.println();
+  Console.println("hello");
   uint8_t id = data[0]; 
   for (int i = 0; i < sizeof(savedID); i ++)
   {
     if (id == savedID[i])
     {
-      Serial.print("ID: ");
-      Serial.println(id);
-      Serial.println(savedID[i] == id);
+      Console.print("ID: ");
+      Console.println(id);
+      Console.println(savedID[i] == id);
       return false;
     }
   }
@@ -74,6 +74,15 @@ uint16_t GetSensorData(uint8_t data[])
   return sensor; 
 }
 
+uint8_t getHeartbeatID(uint8_t data[])
+{
+  if(data[0] & 0x80)
+  {
+    return data[1];
+  }
+  return 0;
+}
+
 bool GetChecksum(uint8_t data[])
 {
   uint8_t check = 0;
@@ -84,20 +93,11 @@ bool GetChecksum(uint8_t data[])
   
 }
 
-uint8_t getHeartbeatID(uint8_t data[])
-{
-  if(data[0] &  0x80)
-  {
-    return data[1];
-  }
-  return 0;
-}
-
-void BuildSendableData(uint8_t *data, uint8_t volt, uint8_t amp, uint16_t battlevel, uint16_t sensor)
+void BuildSendableData(uint8_t *data, uint8_t ID, uint8_t volt, uint8_t amp, uint16_t battlevel, uint16_t sensor)
 {
   
 
-  data[0] = IDcounter;
+  data[0] = ID;
   data[1] = volt;
   data[2] = amp;
   
@@ -117,16 +117,6 @@ void BuildSendableData(uint8_t *data, uint8_t volt, uint8_t amp, uint16_t battle
   temp16 == sensor & 0x00ff;
   data[6] = temp16;
   temp16 = 0;
-  IDcounter++;
-  IDcounter %= 127;
-} 
-
-void BuildHeartbeatData(uint8_t *data, uint8_t Heartbeat)
-{
-  
-  
-  data[0] = IDcounter | 0x80;
-  data[1] = Heartbeat;
   IDcounter++;
   IDcounter %= 127;
 } 
