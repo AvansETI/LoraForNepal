@@ -108,7 +108,7 @@ bool sendHeartBeat(void *){
   txTransmitter(); 
   return true; 
 
-  Serial.println("HEartbeatData Send");
+  
 }
 
 

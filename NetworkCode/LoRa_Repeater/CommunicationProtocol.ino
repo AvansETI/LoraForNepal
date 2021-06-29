@@ -29,16 +29,12 @@ bool CheckParity(uint8_t data[])
 //returns true if the the value has not been seen before and the message is free to use
 bool CheckID(uint8_t data[], uint8_t savedID[])
 {
-  Serial.println();
-  Serial.println("hello");
   uint8_t id = data[0]; 
   for (int i = 0; i < sizeof(savedID); i ++)
   {
     if (id == savedID[i])
     {
-      Serial.print("ID: ");
-      Serial.println(id);
-      Serial.println(savedID[i] == id);
+      
       return false;
     }
   }
@@ -128,7 +124,7 @@ void BuildHeartbeatData(uint8_t *data, uint8_t Heartbeat)
   
   
   data[0] = IDcounter | 0x80;
-  data[0] = data[0] - Heartbeat;
+  data[0] = data[0] | Heartbeat;
   data[1] = Heartbeat;
   IDcounter++;
   IDcounter %= 127;
